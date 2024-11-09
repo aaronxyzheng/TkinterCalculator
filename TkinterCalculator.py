@@ -1,3 +1,4 @@
+import tkinter as tk
 import customtkinter as ctk
 
 class Calculator(ctk.CTk):
@@ -7,18 +8,23 @@ class Calculator(ctk.CTk):
         self.geometry('400x600')
         self.title('Calculator')
 
-        # Frames + Grid Layout Setup
+        # Frames Setup 
         self.text_frame = ctk.CTkFrame(self, fg_color = 'transparent')
         self.button_frame = ctk.CTkFrame(self, fg_color = 'transparent')
+
+        # Window Grid Setup
         self.columnconfigure(0, weight = 1, uniform = 'a')
-        self.rowconfigure(0, weight = 9, uniform = 'a')
-        self.rowconfigure((1,2,3,4,5), weight = 4, uniform = 'a')
+        self.rowconfigure(0, weight = 4, uniform = 'a')
+        self.rowconfigure((1,2,3,4,5), weight = 3, uniform = 'a')
 
-        # Setup Buttons
+        # Setup Layout 
         self.setup_buttons()
-
+        self.update_label(1)
         self.mainloop()
     def setup_buttons(self):
+        # Pack Text Frame
+        self.text_frame.grid(column = 0, row = 0, sticky = 'nsew')
+
         # Setup Rows + Columns
         self.button_frame.columnconfigure((0,1,2,3), weight = 1, uniform = 'a')
         self.button_frame.rowconfigure((0,1,2,3,4), weight = 1, uniform = 'a')
@@ -59,6 +65,12 @@ class Calculator(ctk.CTk):
                 button.grid(column = buttons[item][2], row = buttons[item][3], columnspan = buttons[item][4], sticky = 'nsew', padx = padding, pady = padding)
         
         self.button_frame.grid(column = 0, row = 1, rowspan = 5, sticky = 'nsew')
+    
+    def update_label(self, label_value):
+
+        self.label = ctk.CTkLabel(self.text_frame, text = label_value, text_color = '#FFFFFF', font = ('Calibri', 80, 'bold'))
+        self.label.place(relx = 1, rely = 1, x=-10 , anchor = 'se')
+
     def clear(self):
         print('clear')
     def negate(self):
@@ -70,7 +82,7 @@ class Calculator(ctk.CTk):
     def decimal(self):
         print('decimal')
     def number(self, input):
-        print(input) 
+        print(input)
     def equals(self):
         print('equals')
 
