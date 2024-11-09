@@ -11,15 +11,22 @@ class Calculator(ctk.CTk):
         # Frames Setup 
         self.text_frame = ctk.CTkFrame(self, fg_color = 'transparent')
         self.button_frame = ctk.CTkFrame(self, fg_color = 'transparent')
+        self.label = ctk.CTkLabel(self.text_frame, text = 0, text_color = '#FFFFFF', font = ('Calibri', 75, 'bold'))
+        self.label.place(relx = 1, rely = 1, x=-10 , anchor = 'se')
 
         # Window Grid Setup
         self.columnconfigure(0, weight = 1, uniform = 'a')
         self.rowconfigure(0, weight = 4, uniform = 'a')
         self.rowconfigure((1,2,3,4,5), weight = 3, uniform = 'a')
 
+        # Variables for Math Calculators
+        self.value = None
+        self.past_value = None
+        self.operator = None
+
         # Setup Layout 
         self.setup_buttons()
-        self.update_label(1)
+        self.update_label(0)
         self.mainloop()
     def setup_buttons(self):
         # Pack Text Frame
@@ -67,24 +74,68 @@ class Calculator(ctk.CTk):
         self.button_frame.grid(column = 0, row = 1, rowspan = 5, sticky = 'nsew')
     
     def update_label(self, label_value):
-
-        self.label = ctk.CTkLabel(self.text_frame, text = label_value, text_color = '#FFFFFF', font = ('Calibri', 80, 'bold'))
+        
+        self.label.place_forget()
+        self.label = ctk.CTkLabel(self.text_frame, text = label_value, text_color = '#FFFFFF', font = ('Calibri', 75, 'bold'))
         self.label.place(relx = 1, rely = 1, x=-10 , anchor = 'se')
 
     def clear(self):
-        print('clear')
+        self.value = None 
+        self.past_value = None 
+        self.operator = None 
+        self.update_label(0)
     def negate(self):
-        print('negate')
+        if self.value != None:
+            self.value *= -1 
+            self.update_label(self.value)
+        elif self.past_value != None:
+            self.past_value *= -1
+            self.update_label(self.past_value)
     def percentage(self):
-        print('percentage')
+        if self.value != None:
+            self.value *= 0.01 
+            self.update_label(self.value)
+        elif self.past_value != None:
+            self.past_value *= 0.01
+            self.update_label(self.past_value)
     def operation(self, input):
-        print(input)
+        if self.value != None and self.past_value == None and self.operator == None:
+            self.past_value = self.value 
+            self.value = None 
+            self.operator = input
+        elif self.past_value != None and self.value == None:
+            self.operator = input
+        elif self.past_value != None and self.value != None: 
+            self.equals()
+            self.operator = input
     def decimal(self):
-        print('decimal')
+        pass
     def number(self, input):
-        print(input)
+        input = int(input)
+
+        if self.value == None:
+            self.value = input 
+        else:
+            self.value = self.value * 10 + input
+        self.update_label(self.value)
+
+
     def equals(self):
-        print('equals')
+        if self.value != None and self.past_value != None: 
+            if self.operator == 'x':
+                value = self.past_value * self.value 
+            elif self.operator == '-': 
+                value = self.past_value - self.value 
+            elif self.operator == '+': 
+                value = self.past_value + self.value 
+            elif self.operator == '÷':
+                value = self.past_value / self.value 
+            if value.is_integer():
+                value = int(value)
+            self.past_value = value 
+            self.value = None 
+            self.operator = None
+            self.update_label(round(value, 5))
 
 
 calculator = Calculator()
