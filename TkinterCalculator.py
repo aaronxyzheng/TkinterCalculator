@@ -84,6 +84,8 @@ class Calculator(ctk.CTk):
         self.past_value = None 
         self.operator = None 
         self.update_label(0)
+        self.decimal_active = False 
+        self.decimal_places = 0
     def negate(self):
         if self.value != None:
             self.value *= -1 
@@ -108,15 +110,36 @@ class Calculator(ctk.CTk):
         elif self.past_value != None and self.value != None: 
             self.equals()
             self.operator = input
+        self.decimal_active = False 
+        self.decimal_places = 0
     def decimal(self):
-        pass
+        if self.value == None:
+            self.value = 0
+            self.decimal_active = True
+            self.decimal_places = 0
+        elif not hasattr(self, 'decimal_active') or not self.decimal_active:
+            self.decimal_active = True
+            self.decimal_places = 0
+
     def number(self, input):
         input = int(input)
+        
+        if not hasattr(self, 'decimal_active'):
+            self.decimal_active = False
 
-        if self.value == None:
-            self.value = input 
+        if self.value is None:
+            self.value = input
+            if self.decimal_active:
+                self.decimal_places = 1
+                self.value = self.value / (10 ** self.decimal_places)
         else:
-            self.value = self.value * 10 + input
+            if len(str(abs(int(self.value)))) < 9:
+                if self.decimal_active:
+                    self.decimal_places += 1
+                    self.value = self.value + (input / (10 ** self.decimal_places))
+                else:
+                    self.value = self.value * 10 + input
+        
         self.update_label(self.value)
 
 
@@ -136,6 +159,8 @@ class Calculator(ctk.CTk):
             self.value = None 
             self.operator = None
             self.update_label(round(value, 5))
+        self.decimal_active = False 
+        self.decimal_places = 0
 
 
 calculator = Calculator()
