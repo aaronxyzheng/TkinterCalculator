@@ -7,6 +7,7 @@ A calculator built using Python's Tkinter library. Inspired by the GUI of calcul
 - **Clear button**: Resets the calculator.
 - **Sign toggle**: Allows you to toggle between positive and negative numbers.
 - **Percentage**: Calculates percentage of a number.
+- **Decimal Point**: Allows you to write numbers that aren't just integers.
 
 ## Requirements
 
